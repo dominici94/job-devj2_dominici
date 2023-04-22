@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Rating, Spinner } from "flowbite-react";
+import { Button, Rating, Spinner, Dropdown } from "flowbite-react";
 
 const Index = (props) => {
   const [movies, setMovies] = useState([]);
@@ -11,10 +11,28 @@ const Index = (props) => {
     return fetch("/api/movies")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(data.movies);
         setMovies(data.movies);
         setLoading(false);
       });
+  };
+
+  const sortChangeHandler = (event) => {
+    const orderedMovies = [...movies];
+
+    if (event.target.value === "rating") {
+      orderedMovies.sort((a, b) => b.rating - a.rating);
+    }
+
+    if (event.target.value === "release_date") {
+      orderedMovies.sort(
+        (a, b) =>
+          b.release_date.split("-").join("") -
+          a.release_date.split("-").join("")
+      );
+    }
+
+    setMovies(orderedMovies);
   };
 
   useEffect(() => {
@@ -24,6 +42,14 @@ const Index = (props) => {
   return (
     <Layout>
       <Heading />
+
+      <div>
+        <label htmlFor="order">Ordina per:</label>
+        <select name="order" id="order" onChange={sortChangeHandler}>
+          <option value="release_date">Data di uscita</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
 
       <MovieList loading={loading}>
         {movies.map((item, key) => (
