@@ -11,7 +11,7 @@ const Index = (props) => {
     return fetch("/api/movies")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.movies);
+        // console.log(data.movies);
         setMovies(data.movies);
         setLoading(false);
       });
@@ -43,8 +43,6 @@ const Index = (props) => {
       <Heading />
 
       <Actions
-        className=""
-        onChangeOrder={sortChangeHandler}
         onChangeOrderDate={sortHandlerDate}
         onChangeOrderRating={sortHandlerRating}
       />
