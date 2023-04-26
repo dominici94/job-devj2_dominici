@@ -17,21 +17,20 @@ const Index = (props) => {
       });
   };
 
-  const sortChangeHandler = (event) => {
+  const sortHandlerDate = (event) => {
     const orderedMovies = [...movies];
 
-    if (event.target.value === "rating") {
-      orderedMovies.sort((a, b) => b.rating - a.rating);
-    }
+    orderedMovies.sort(
+      (a, b) =>
+        b.release_date.split("-").join("") - a.release_date.split("-").join("")
+    );
 
-    if (event.target.value === "release_date") {
-      orderedMovies.sort(
-        (a, b) =>
-          b.release_date.split("-").join("") -
-          a.release_date.split("-").join("")
-      );
-    }
+    setMovies(orderedMovies);
+  };
 
+  const sortHandlerRating = (event) => {
+    const orderedMovies = [...movies];
+    orderedMovies.sort((a, b) => b.rating - a.rating);
     setMovies(orderedMovies);
   };
 
@@ -43,13 +42,12 @@ const Index = (props) => {
     <Layout>
       <Heading />
 
-      <div>
-        <label htmlFor="order">Ordina per:</label>
-        <select name="order" id="order" onChange={sortChangeHandler}>
-          <option value="release_date">Data di uscita</option>
-          <option value="rating">Rating</option>
-        </select>
-      </div>
+      <Actions
+        className=""
+        onChangeOrder={sortChangeHandler}
+        onChangeOrderDate={sortHandlerDate}
+        onChangeOrderRating={sortHandlerRating}
+      />
 
       <MovieList loading={loading}>
         {movies.map((item, key) => (
@@ -80,6 +78,21 @@ const Heading = (props) => {
       <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
         Explore the whole collection of movies
       </p>
+    </div>
+  );
+};
+
+const Actions = (props) => {
+  return (
+    <div className="mb-8">
+      <Dropdown label="Order By:">
+        <Dropdown.Item onClick={props.onChangeOrderDate}>
+          Release Date
+        </Dropdown.Item>
+        <Dropdown.Item onClick={props.onChangeOrderRating}>
+          Rating
+        </Dropdown.Item>
+      </Dropdown>
     </div>
   );
 };
